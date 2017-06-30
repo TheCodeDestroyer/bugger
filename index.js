@@ -10,18 +10,26 @@ const slapp = Slapp({
     context: BeepBoopContext()
 });
 
-const app = slapp.attachToExpress(express()).listen(port);
+const server = slapp.attachToExpress(express());
 
 slapp.message('^(hi|hello|hey).*', ['direct_mention', 'direct_message'], (msg, text, greeting) => {
-    msg.say(`${greeting}, how are you?`, { what: greeting })
+    msg.say({
+            text: `${greeting}, how are you?`
+        })
         .route('handleHowAreYou');
 });
 
 // register a route handler
-slapp.route('handleHowAreYou', (msg, state) => {
+slapp.route('handleHowAreYou', (msg,) => {
     msg.say(['Me too', 'Noted', 'That is interesting'])
 });
 
-app.get('/', (res, req) => {
+server.get('/', (res, req) => {
     res.send('Hello');
 });
+
+server.get('/healthz', (res, req) => {
+    res.send({ version: process.env.VERSION, id: process.env.BEEPBOOP_ID })
+});
+
+server.listen(port);
