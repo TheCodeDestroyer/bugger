@@ -1,10 +1,14 @@
 const _ = require('lodash');
 const express = require('express');
 const Slapp = require('slapp');
+const BeepBoopConvoStore = require('slapp-convo-beepboop');
 const BeepBoopContext = require('slapp-context-beepboop');
 const port = process.env.PORT || 3000;
 
-const slapp = Slapp({ context: BeepBoopContext() });
+const slapp = Slapp({
+    convo_store: BeepBoopConvoStore(),
+    context: BeepBoopContext()
+});
 
 const app = slapp.attachToExpress(express()).listen(port);
 
