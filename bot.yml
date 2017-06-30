@@ -1,0 +1,16 @@
+name: Bugger
+description:
+email: hello@beepboophq.com
+avatar: .beepboop/inorout-icon.png
+background: .beepboop/inorout-bg.png
+screenshots:
+  - screenshot: .beepboop/screenshot1.png
+  - screenshot: .beepboop/screenshot2.png
+  - screenshot: .beepboop/screenshot3.png
+slackscopes:
+  - bot
+  - commands
+  - reactions:write
+health-check:
+  protocol: http
+  path: /healthz
