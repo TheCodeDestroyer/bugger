@@ -7,21 +7,44 @@ const port = process.env.PORT || 3000;
 
 const slapp = Slapp({
     convo_store: BeepBoopConvoStore(),
-    context: BeepBoopContext()
+    context: BeepBoopContext(),
+    log: true,
+    colors: true
 });
 
 const server = slapp.attachToExpress(express());
 
-slapp.message('^(hi|hello|hey).*', ['direct_mention', 'direct_message'], (msg, text, greeting) => {
+slapp.message('^(hi|hello|hey).*', ['direct_mention', 'direct_message'], (msg, text, greeting, match2) => {
+    console.log(match2);
     msg.say({
-            text: `${greeting}, how are you?`
+            text: `${greeting}, how are you?`,
+            attachments: [{
+                text: '',
+                callback_id: 'how_are_you',
+                actions: [{
+                    name: 'answer',
+                    text: ':thumbsup:',
+                    type: 'button',
+                    value: 'up',
+                    styled: 'default',
+                }, {
+                    name: 'answer',
+                    text: ':thumbsdown:',
+                    type: 'button',
+                    value: 'down',
+                    styled: 'default',
+                }]
+            }]
         })
-        .route('handleHowAreYou');
+        .route('handleHi', { what: greeting });
 });
 
-// register a route handler
-slapp.route('handleHowAreYou', (msg,) => {
-    msg.say(['Me too', 'Noted', 'That is interesting'])
+slapp.route('handleHi', (msg, state) => {
+    if (msg.type !== 'action') {
+        msg.say('You must choose a button!').route('handleHi', state);
+        return;
+    }
+    msg.say('Me too');
 });
 
 server.get('/', (res, req) => {
